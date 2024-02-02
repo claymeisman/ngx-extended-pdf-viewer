@@ -187,7 +187,7 @@ export class NgxFormSupport {
     }
   }
 
-  private doUpdateAngularFormValue(field: HtmlFormElement, value: { value: string }, fullKey: string) {
+  private doUpdateAngularFormValue(field: HtmlFormElement, value: { value: string; formattedValue?: string }, fullKey: string) {
     let change = false;
     if (field instanceof HTMLInputElement && field.type === 'checkbox') {
       const exportValue = field.getAttribute('exportvalue');
@@ -218,8 +218,12 @@ export class NgxFormSupport {
         }
       }
     } else {
-      if (this.formData[fullKey] !== value.value) {
-        this.formData[fullKey] = value.value;
+      if (value.value == undefined && value.formattedValue == null) {
+        return change;
+      }
+      let val = value.value || value.formattedValue || '';
+      if (this.formData[fullKey] !== val) {
+        this.formData[fullKey] = val;
         change = true;
       }
     }
